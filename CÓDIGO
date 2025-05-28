@@ -1,0 +1,67 @@
+// main.go
+package main
+
+import (
+	"fmt"
+	"streaming/catalog"
+	"streaming/search"
+)
+
+func main() {
+	fmt.Println("Sistema de Gestión de Streaming")
+
+	// Crear catálogo inicial
+	catalogo := []catalog.Content{
+		catalog.NewContent("Inception", "Ciencia Ficción", 2010, 148),
+		catalog.NewContent("Interstellar", "Ciencia Ficción", 2014, 169),
+		catalog.NewContent("Breaking Bad", "Drama", 2008, 47),
+	}
+
+	// Mostrar catálogo
+	fmt.Println("\nCatálogo completo:")
+	for _, c := range catalogo {
+		catalog.PrintContent(c)
+	}
+
+	// Buscar por género
+	fmt.Println("\n🔍 Contenido filtrado por género: Ciencia Ficción")
+	resultado := search.FilterByGenre(catalogo, "Ciencia Ficción")
+	for _, r := range resultado {
+		catalog.PrintContent(r)
+	}
+}
+
+// catalog/catalog.go
+package catalog
+
+import "fmt"
+
+type Content struct {
+	Title  string
+	Genre  string
+	Year   int
+	Length int // duración en minutos
+}
+
+func NewContent(title, genre string, year, length int) Content {
+	return Content{Title: title, Genre: genre, Year: year, Length: length}
+}
+
+func PrintContent(c Content) {
+	fmt.Printf("- %s (%d) [%s] - %d min\n", c.Title, c.Year, c.Genre, c.Length)
+}
+
+// search/search.go
+package search
+
+import "streaming/catalog"
+
+func FilterByGenre(contents []catalog.Content, genre string) []catalog.Content {
+	var result []catalog.Content
+	for _, c := range contents {
+		if c.Genre == genre {
+			result = append(result, c)
+		}
+	}
+	return result
+}
